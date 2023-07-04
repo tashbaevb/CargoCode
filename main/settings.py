@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # local
     "account",
     "chat",
+    "reviews",
 ]
 
 REST_FRAMEWORK = {
