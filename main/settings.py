@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "account",
     "chat",
     "reviews",
+    "tracking",
 ]
 
 REST_FRAMEWORK = {
@@ -54,11 +55,11 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     # не рескоментировывать иначе блядь чат не работает сука
-    # "DEFAULT_AUTHENTICATION_CLASSES": [
-    #     # 'rest_framework.authentication.BasicAuthentication',
-    #     # 'rest_framework.authentication.SessionAuthentication',
-    #     "knox.auth.TokenAuthentication",
-    # ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        "knox.auth.TokenAuthentication",
+    ],
 }
 
 
