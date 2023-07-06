@@ -1,14 +1,14 @@
 from rest_framework import generics, permissions, serializers, status
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, CompanySerializer, DriverSerializer, \
     CompanyDriverSerializer
 from django.contrib.auth import login, authenticate
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 import base64
-from django.core.files.base import ContentFile
-from .models import Driver
+from .models import Driver, Company, Company3ver
 
 
 # User Register API
@@ -27,6 +27,7 @@ class RegisterAPI(generics.GenericAPIView):
 
 # Driver Register API
 class DriverRegisterAPI(generics.GenericAPIView):
+    queryset = Driver.objects.all()
     serializer_class = DriverSerializer
 
     def post(self, request, *args, **kwargs):
@@ -59,20 +60,6 @@ class DriverRegisterAPI(generics.GenericAPIView):
             raise serializers.ValidationError("Ошибка при кодировании файла")
 
 
-# Company Driver Register API
-class CompanyDriverRegisterAPI(generics.GenericAPIView):
-    serializer_class = CompanyDriverSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        company_driver = serializer.save()
-        return Response({
-            "driver": CompanyDriverSerializer(company_driver, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(company_driver.user)[1]
-        })
-
-
 # Company Register API
 class CompanyRegisterAPI(generics.GenericAPIView):
     serializer_class = CompanySerializer
@@ -87,8 +74,97 @@ class CompanyRegisterAPI(generics.GenericAPIView):
         })
 
 
+# Company Driver Register API
+class CompanyDriverRegisterAPI(generics.GenericAPIView):
+    serializer_class = CompanyDriverSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        company_driver = serializer.save()
+        return Response({
+            "driver": CompanyDriverSerializer(company_driver, context=self.get_serializer_context()).data,
+            "token": AuthToken.objects.create(company_driver.user)[1]
+        })
+
+
+# ------------------------------------------------------------------------------------
+# User Profile API
+class UserProfileAPI(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    def get_object(self):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = UserSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+# Company Profile API
+class CompanyDetailAPI(generics.RetrieveUpdateAPIView):
+    serializer_class = CompanySerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        company = self.get_object()
+        serializer = CompanySerializer(company)
+        return Response(serializer.data)
+
+    def get_object(self):
+        return self.request.user.company
+
+    def get_queryset(self):
+        return Company.objects.filter(user=self.request.user)
+
+
+# Company Driver Profile API
+class CompanyDriverDetailAPI(generics.RetrieveUpdateAPIView):
+    serializer_class = CompanyDriverSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        company_driver = self.get_object()
+        serializer = CompanyDriverSerializer(company_driver)
+        return Response(serializer.data)
+
+    def get_object(self):
+        return Company3ver.objects.get(user=self.request.user)
+
+    def get_queryset(self):
+        return Company3ver.objects.filter(user=self.request.user)
+
+
+# Driver Profile API
+class DriverDetailAPI(generics.RetrieveUpdateAPIView):
+    serializer_class = DriverSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        driver = self.get_object()
+        serializer = DriverSerializer(driver)
+        return Response(serializer.data)
+
+    def get_object(self):
+        return self.request.user.driver
+
+    def get_queryset(self):
+        return Driver.objects.filter(user=self.request.user)
+
+
 # ------------------------------------------------------------------------
 
+# Login API
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
 
@@ -108,30 +184,3 @@ class LoginAPI(KnoxLoginView):
             return Response({
                 "error": "Invalid credentials"
             }, status=status.HTTP_401_UNAUTHORIZED)
-
-
-# Login API
-# class LoginAPI(generics.GenericAPIView):
-#     serializer_class = AuthTokenSerializer
-#     permission_classes = (permissions.AllowAny,)
-#
-#     def post(self, request, format=None):
-#         email = request.data.get('email')
-#         password = request.data.get('password')
-#         user = authenticate(request, email=email, password=password)
-#
-#         if user:
-#             login(request, user)
-#             return super(LoginAPI, self).post(request, format=None)
-#         else:
-#             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-
-# class LoginAPI(KnoxLoginView):
-#     permission_classes = (permissions.AllowAny,)
-#
-#     def post(self, request, format=None):
-#         serializer = AuthTokenSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data['user']
-#         login(request, user)
-#         return super(LoginAPI, self).post(request, format=None)
