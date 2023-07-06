@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FirstOrder, SecondOrder
+from .models import FirstOrder, SecondOrder, Order
 
 # Register your models here.
 
