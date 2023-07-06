@@ -1,7 +1,9 @@
-from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from .models import FirstOrder as FirstOrderModel, SecondOrder as SecondOrderModel, Order as OrderModel
+import uuid
 
+from rest_framework import serializers
+from .models import FirstOrder as FirstOrderModel, SecondOrder as SecondOrderModel,\
+    Order as OrderModel, \
+    OrderStack as OrderStackModel
 
 class Order(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +32,10 @@ class SecondOrder(Order):
                                       'volume_x',
                                       'volume_y',
                                       'volume_z', ]
+
+
+class OrderStack(serializers.ModelSerializer):
+    class Meta:
+        model = OrderStackModel
+        fields = ['id', 'order_id', 'sender', 'type', 'status', 'driver_type', 'driver_id']
+

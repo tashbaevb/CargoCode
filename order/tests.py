@@ -1,6 +1,6 @@
 from django.test import TestCase
-from .serializers import Order
+from . import models
 # Create your tests here.
 
-st = Order()
-print(repr(st))
+st = models.Order.objects.all()
+print(st.fil)
