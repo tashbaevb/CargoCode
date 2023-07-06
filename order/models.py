@@ -31,8 +31,10 @@ class Order(models.Model):
     receiver_name = models.CharField(max_length=200)
     receiver_surname = models.CharField(max_length=200)
     receiver_number = models.CharField(max_length=200)
-    origin = models.FloatField()
-    destination = models.FloatField()
+    origin_lon = models.FloatField()
+    origin_lat = models.FloatField()
+    destination_lon = models.FloatField()
+    destination_lat = models.FloatField()
     date_until = models.DateTimeField()
     delivery_type = models.CharField(max_length=200)
 

@@ -12,8 +12,10 @@ class Order(serializers.ModelSerializer):
                   'receiver_name',
                   'receiver_surname',
                   'receiver_number',
-                  'origin',
-                  'destination',
+                  'origin_lon',
+                  'origin_lat',
+                  'destination_lon',
+                  'destination_lat',
                   'date_until',
                   'delivery_type']
 
