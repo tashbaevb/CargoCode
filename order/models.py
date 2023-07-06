@@ -1,9 +1,12 @@
 import uuid
 
 from django.db import models
+from django.dispatch import receiver
+
 from account.models import TYPE_OF_CAR
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.db.models.signals import pre_delete
 
 User = settings.AUTH_USER_MODEL
 
@@ -44,6 +47,11 @@ class Order(models.Model):
                 raise Exception('specify type of Order')
 
     # delete OrderStack on deletion
+    def delete(self):
+        order_stack = OrderStack.objects.get(order_id=self.pk)
+        if order_stack is not None:
+            order_stack.delete()
+        super(Order, self).delete()
 
 
 class FirstOrder(Order):
