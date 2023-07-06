@@ -32,7 +32,7 @@ class Driver(models.Model):
     car_number = models.CharField(max_length=100, blank=True, default='')
     car_title = models.CharField(max_length=100, blank=True, default='')
     car_year = models.IntegerField(blank=True, default='')
-    car_type = models.CharField(choices=TYPE_OF_CAR, max_length=100, blank=True, default='')
+    car_type = models.CharField(choices=TYPE_OF_CAR, max_length=100, blank=True, default='big')
     bank = models.CharField(max_length=100, blank=True, default='')
     name = models.CharField(max_length=100, blank=True, default='')
     phone_number = models.CharField(max_length=100, blank=True, default='')
