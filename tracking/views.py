@@ -1,7 +1,7 @@
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from account import models as acc_models
 from .models import Coordinate, Device
 from .serializers import CoordinateSerializer, DeviceSerializer
 
@@ -14,7 +14,8 @@ class DeviceListView(APIView):
         """
         List all the device items for given requested user
         """
-        devices = Device.objects.filter(user=request.user.id)
+        driver = acc_models.Driver.objects.get(user_id=request.user.id)
+        devices = Device.objects.filter(user=driver.id)
         serializer = DeviceSerializer(devices, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -23,7 +24,8 @@ class DeviceListView(APIView):
         Create the device with given url data
         """
         data = request.data
-        data.update({"user": request.user.id})
+        driver = acc_models.Driver.objects.get(user_id=request.user.id)
+        data.update({"user": driver.id})
         serializer = DeviceSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -49,14 +51,15 @@ class DeviceDetailView(APIView):
         """
         Updates the device item with given token if exists
         """
-        device_instance = self.get_object(token, request.user.id)
+        driver = acc_models.Driver.objects.get(user_id=request.user.id)
+        device_instance = self.get_object(token, driver.id)
         if not device_instance:
             return Response(
                 {"detail": "Object with device token does not exists"},
                 status=status.HTTP_404_NOT_FOUND,
             )
         data = request.data
-        data.update({"user": request.user.id})
+        data.update({"user": driver.id})
         serializer = DeviceSerializer(instance=device_instance, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -67,7 +70,8 @@ class DeviceDetailView(APIView):
         """
         Retrieves the Url with given url_id
         """
-        device_instance = self.get_object(token, request.user.id)
+        driver = acc_models.Driver.objects.get(user_id=request.user.id)
+        device_instance = self.get_object(token, driver.id)
         if not device_instance:
             return Response(
                 {"detail": "Object with url id does not exists"},
@@ -80,7 +84,8 @@ class DeviceDetailView(APIView):
         """
         Deletes the url item with given url_id if exists
         """
-        device_instance = self.get_object(token, request.user.id)
+        driver = acc_models.Driver.objects.get(user_id=request.user.id)
+        device_instance = self.get_object(token, driver.id)
         if not device_instance:
             return Response(
                 {"detail": "Object with url id does not exists"},
@@ -107,7 +112,8 @@ class CoordinateListView(APIView):
         """
         List all the coordinate items for given requested user
         """
-        device = self.get_device_obj(token, request.user.id)
+        driver = acc_models.Driver.objects.get(user_id=request.user.id)
+        device = self.get_device_obj(token, driver.id)
         coordinates = Coordinate.objects.filter(device=device.id)[:20]
         serializer = CoordinateSerializer(coordinates, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -116,7 +122,8 @@ class CoordinateListView(APIView):
         """
         Create the coordinate with given token data
         """
-        device_instance = self.get_device_obj(token, request.user.id)
+        driver = acc_models.Driver.objects.get(user_id=request.user.id)
+        device_instance = self.get_device_obj(token, driver.id)
         if not device_instance:
             return Response(
                 {"detail": "Object with device token does not exists"},
@@ -149,7 +156,8 @@ class CoordinateCurrentView(APIView):
         """
         List all the url items for given requested user
         """
-        device_instance = self.get_device_obj(token, request.user.id)
+        driver = acc_models.Driver.objects.get(user_id=request.user.id)
+        device_instance = self.get_device_obj(token, driver.id)
         if not device_instance:
             return Response(
                 {"detail": "Object with device token does not exists"},
@@ -179,8 +187,8 @@ class CoordinateGetView(APIView):
                 {"detail": "Object with device token does not exists"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        latitude = self.request.query_params.get("lat")
-        longitude = self.request.query_params.get("lon")
+        latitude = self.request.data['lat']
+        longitude = self.request.data['lon']
         data = {"lat": latitude, "lon": longitude, "device": device_instance.id}
         serializer = CoordinateSerializer(data=data)
         if serializer.is_valid():
