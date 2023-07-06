@@ -47,7 +47,7 @@ class Order(models.Model):
                 raise Exception('specify type of Order')
 
     # delete OrderStack on deletion
-    def delete(self):
+    def delete(self, **kwargs):
         order_stack = OrderStack.objects.get(order_id=self.pk)
         if order_stack is not None:
             order_stack.delete()
