@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "cargocode-hack3"
+name = "cargocode"
 version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-packages = [{include = "cargocode_hack3"}]
+packages = [{include = "cargocode"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -17,6 +17,7 @@ django-cors-headers = "^4.1.0"
 pillow = "^10.0.0"
 channels-redis = "^4.1.0"
 channels = "^4.0.0"
+djangorestframework-simplejwt = "^5.2.2"
 
 
 [build-system]
