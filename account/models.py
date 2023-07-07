@@ -9,6 +9,16 @@ TYPE_OF_CAR = (
     ('minivan', 'minivan')
 )
 
+WEEKEND = (
+    ('MON', 'MON'),
+    ('TUE', 'TUE'),
+    ('WEN', 'WEN'),
+    ('TR', 'TR'),
+    ('FRI', 'FRI'),
+    ('SAT', 'SAT'),
+    ('SUN', 'SUN'),
+)
+
 
 class User1(AbstractUser):
     email = models.EmailField(unique=True)
@@ -36,6 +46,8 @@ class Driver(models.Model):
     bank = models.CharField(max_length=100, blank=True, default='')
     name = models.CharField(max_length=100, blank=True, default='')
     phone_number = models.CharField(max_length=100, blank=True, default='')
+    per_km = models.CharField(max_length=10, blank=True, default='')
+    weekends = models.CharField(max_length=10, choices=WEEKEND, blank=True, default='', help_text='Select weekends')
 
     # def save(self, *args, **kwargs):
     #     # При сохранении объекта Driver, если есть значения в полях driver_license и straxovka,
@@ -54,6 +66,7 @@ class Company(models.Model):
     dot_number = models.CharField(max_length=100, blank=True, default='')
     descriptions = models.TextField(blank=True, default='')
     bank_account = models.CharField(max_length=100, blank=True, default='')
+    per_km = models.CharField(max_length=10, blank=True, default='')
 
 
 class Company3ver(models.Model):
@@ -61,6 +74,7 @@ class Company3ver(models.Model):
     car_number = models.CharField(max_length=20, blank=True, default='')
     car_type = models.CharField(max_length=20, choices=TYPE_OF_CAR, blank=True, default='')
     car_title = models.CharField(max_length=60, blank=True, default='')
+    weekends = models.CharField(max_length=10, choices=WEEKEND, blank=True, default='', help_text='Select weekends')
 
 
 class Profile(models.Model):

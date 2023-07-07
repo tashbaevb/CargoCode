@@ -8,7 +8,7 @@ from . import models
 
 
 class OrderView(CreateAPIView):
-    #permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         request.data['sender'] = request.user.pk
@@ -25,7 +25,7 @@ class SecondOrderView(OrderView):
 
 # list of objects related to user
 class OrderStackView(ListAPIView):
-    #permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = OrderStack
 
     def get(self, request, *args, **kwargs):
@@ -34,7 +34,7 @@ class OrderStackView(ListAPIView):
 
 
 class GetDetailedOrder(APIView):
-    #permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = OrderStack
 
     def get(self, request, *args, **kwargs):

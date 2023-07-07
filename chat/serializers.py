@@ -24,7 +24,7 @@ class ConversationListSerializer(serializers.ModelSerializer):
         message = instance.message_set.first()
         return MessageSerializer(
             instance=message
-        ).data  # эта херня в конце заняла 30 минут но нервы трех дней
+        ).data  # эта херня в конце заняла 30 минут, но нервы трех дней
 
 
 class ConversationSerializer(serializers.ModelSerializer):

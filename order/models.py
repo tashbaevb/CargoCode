@@ -3,12 +3,18 @@ import uuid
 from django.db import models
 from django.dispatch import receiver
 
-from account.models import TYPE_OF_CAR
+# from account.models import TYPE_OF_CAR
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import pre_delete
 
 User = settings.AUTH_USER_MODEL
+
+TYPE_OF_CAR = (
+    ('big', 'big'),
+    ('middle', 'middle'),
+    ('minivan', 'minivan')
+)
 
 ORDER_TYPES = (
     ('FT', 'FIRST'),

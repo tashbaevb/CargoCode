@@ -28,8 +28,8 @@ class DriverSerializer(serializers.ModelSerializer):
     class Meta:
         model = Driver
         fields = (
-            'id', 'user', 'driver_license', 'straxovka', 'car_number',
-            'car_title', 'car_year', 'car_type', 'bank', 'name', 'phone_number'
+            'id', 'user', 'driver_license', 'straxovka', 'car_number', 'car_title',
+            'car_year', 'car_type', 'bank', 'name', 'phone_number', 'per_km', 'weekends'
         )
 
     # Create data
@@ -79,7 +79,7 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = ('id', 'user', 'company_name', 'dot_number', 'descriptions', 'bank_account')
+        fields = ('id', 'user', 'company_name', 'dot_number', 'descriptions', 'bank_account', 'per_km')
 
     # Create data
     def create(self, validated_data):
@@ -117,7 +117,7 @@ class CompanyDriverSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company3ver
-        fields = ('id', 'user', 'car_number', 'car_type', 'car_title')
+        fields = ('id', 'user', 'car_number', 'car_type', 'car_title', 'weekends')
 
     # Create data
     def create(self, validated_data):

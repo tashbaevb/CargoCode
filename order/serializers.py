@@ -1,9 +1,10 @@
 import uuid
 
 from rest_framework import serializers
-from .models import FirstOrder as FirstOrderModel, SecondOrder as SecondOrderModel,\
+from .models import FirstOrder as FirstOrderModel, SecondOrder as SecondOrderModel, \
     Order as OrderModel, \
     OrderStack as OrderStackModel
+
 
 class Order(serializers.ModelSerializer):
     class Meta:
@@ -40,4 +41,3 @@ class OrderStack(serializers.ModelSerializer):
     class Meta:
         model = OrderStackModel
         fields = ['id', 'order_id', 'sender', 'type', 'status', 'driver_type', 'driver_id']
-

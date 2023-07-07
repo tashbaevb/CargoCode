@@ -1,6 +1,8 @@
 from django.urls import path
 
-from order.views import *
+# from order.views import *
+
+from .views import OrderStackView, GetDetailedOrder, FirstOrderView, SecondOrderView
 
 urlpatterns = [
     path('api/orders/', OrderStackView.as_view(), name='orders'),
