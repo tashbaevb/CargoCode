@@ -44,8 +44,13 @@ INSTALLED_APPS = [
     "chat",
     "reviews",
     "tracking",
+    'drf_yasg'
 ]
 
+SWAGGER_SETTINGS = {
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+    'DEFAULT_INFO': 'your_project.api.urls.swagger_info',
+}
 
 REST_FRAMEWORK = {
     # "DEFAULT_PERMISSION_CLASSES": [
@@ -58,7 +63,6 @@ REST_FRAMEWORK = {
         "knox.auth.TokenAuthentication",
     ],
 }
-
 
 # AUTH_USER_MODEL = "account.User1"  # turn this off if it cause problems
 
@@ -105,7 +109,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "main.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
